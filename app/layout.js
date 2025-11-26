@@ -1,6 +1,8 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import Header from "@/components/header";
+import { ConvexClientProvider } from "./ConvexClientProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Create Next App",
@@ -19,7 +21,10 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
+          <ClerkProvider>
 
+
+<ConvexClientProvider>
           {/* Header */}
           <Header />
           <main className="min-h-screen relative container mx-auto pt-40 md:pt-32">
@@ -41,6 +46,9 @@ export default function RootLayout({ children }) {
             </div>
             </footer>
           </main>
+
+          </ConvexClientProvider>
+        </ClerkProvider>
         </ThemeProvider>
       </body>
     </html>
