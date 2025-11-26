@@ -1,7 +1,9 @@
 
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Button } from "./ui/button";
 
 const Header = () => {
   return <>
@@ -20,6 +22,21 @@ const Header = () => {
 
 
         {/* Right Side Actions */}
+
+        <div className="flex items-center gap-4 ">
+          <SignedIn>
+            {/* Create Event */}
+            <UserButton /> 
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <Button size="sm">Sign In </Button>
+              </SignInButton >
+            
+          </SignedOut >
+
+
+        </div>
         
 
     </div>
