@@ -42,4 +42,100 @@ export default defineSchema({
 
 
       }).index("by_token", ["tokenIdentifier"]),
+
+
+
+
+
+      events : defineTable({
+        tilte : v.string(),
+        descriptionm : v.string(),
+        slug : v.string(),
+
+
+        // Organizer
+        organizer : v.id("users"),
+        organizerName : v.string(),
+
+
+        // Event Details
+        category : v.string(),
+        tags : v.array(v.string()),
+
+
+
+        // Data and Time 
+
+        startDate : v.number(),
+        endDate : v.number(),
+        timezone : v.string(),
+
+
+        // Location
+         locationType : v.union(v.literal("physical"),v.literal("online")),
+         venue : v.optional(v.string()),
+         address :v.optional(v.string()),
+         city : v.string(),
+         state : v.optional(v.string()),
+
+    //   Capacity and Ticketing 
+    capacity : v.number(),
+    ticketType : v.union(v.literal("free"),v.literal("paid")),
+    ticketPrice : v.optional(v.number()),  //paid at event offline
+    registrationCount : v.number(),
+
+
+    // Customization 
+
+    coverImage : v.optional(v.string()),
+    themeColor : v.optional(v.string()),
+
+
+
+    // Timestamps 
+
+    createdAt : v.number(),
+    updatedAt : v.number(),
+
+      }).index("by_organizer", ["organizer"])
+      .index("by_category", ["category"])
+      .index("by_start_date",["startDate"])
+      .index("by_slug",["slug"])
+      .searchIndex("search_title",{searchField : "tilte" }),
+
+      registations : defineTable({
+
+        eventId : v.id("events"),
+        userId : v.id("users"),
+
+
+
+        // Attendeee Info 
+        attendeeName : v.string(),
+        attendeeEmail : v.string(),
+
+
+
+
+        // Qr code for entry 
+        qrCode : v.string(),  //Unique ID FOR QR
+
+
+
+        // Check-In 
+
+        checkedIn : v.boolean(),
+        checkedInAt : v.optional(v.number()),
+
+
+        // Status 
+        status : v.union(v.literal("confirmed"),v.literal("cancelled")),
+
+        registeredId : v.number(),
+
+        
+      }).index("by_event",["eventId"])
+      .index("by_user",["userId"])
+      .index("by_event_user",["eventId","userId"])
+      .index("by_qr_code",["qrCode"]),
 })
