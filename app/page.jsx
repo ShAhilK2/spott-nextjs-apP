@@ -3,10 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="text-center sm:text-left">
-      <section className="relstive p-16 overflow-hidden">
+      <section className="relative p-16 overflow-hidden">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
           {/* Left */}
 
@@ -20,13 +20,13 @@ const page = () => {
               Discover & <br />
               create amazing
               <br />
-              <span className="bg-linear-to-r from-blue-400 via-purple-400  to-orange-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400  to-orange-400 bg-clip-text text-transparent">
                 event.
               </span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-400 mb-12 max-w-lg font-light">
-              Whether you&apos;re hosting or attending,Spott makes every event memorable. Join our
+              Whether you&apos;re hosting or attending, Spott makes every event memorable. Join our
               community today.
             </p>
 
@@ -55,4 +55,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
