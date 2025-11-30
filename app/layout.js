@@ -1,9 +1,11 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "../components/theme-provider";
 import "./globals.css";
-import Header from "@/components/header";
+
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import Header from "../components/header";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Spott",
@@ -13,9 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`bg-linear-to-br from-gray-950 via-zinc-900 to-stone-900 text-white`}
-      >
+      <body className={`bg-linear-to-br from-gray-950 via-zinc-900 to-stone-900 text-white`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -41,10 +41,9 @@ export default function RootLayout({ children }) {
 
                 {/* footer */}
                 <footer className="border-t border-gray-800/50 py-8 px-6 max-w-7xl mx-auto">
-                  <div className="text-sm text-gray-400">
-                    Made with ❤️ by Shahil Kataria
-                  </div>
+                  <div className="text-sm text-gray-400">Made with ❤️ by Shahil Kataria</div>
                 </footer>
+                <Toaster richColors />
               </main>
             </ConvexClientProvider>
           </ClerkProvider>
