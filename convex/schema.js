@@ -2,140 +2,108 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // Users Table
+  users: defineTable({
+    name: v.string(),
+    tokenIdentifier: v.string(), //Clerk user Id for auth
+    email: v.string(),
+    imageUrl: v.optional(v.string()),
 
-    // Users Table 
-    users: defineTable({
-        name: v.string(),
-        tokenIdentifier: v.string(),   //Clerk user Id for auth
-        email : v.string(),
-        imageUrl : v.optional(v.string()),
+    // OnBoarding
 
+    hasCompletedOnBoarding: v.boolean(),
+    location: v.optional(
+      v.object({
+        city: v.string(),
+        state: v.optional(v.string()),
+        country: v.string(),
+      })
+    ),
 
-        // OnBoarding 
+    interests: v.optional(v.array(v.string())), // Minimum 3 Categeories
 
-        hasCompletedOnBoarding : v.boolean(),
-        location : v.optional(v.object({
-            city : v.string(),
-            state : v.optional(v.string()),
-            country : v.string(),
-            
-        })),
+    // Organizer  tracking (User Subscription)
 
+    freeEventsCreated: v.number(), //Track free event limit (1 free)
 
-        interests : v.optional(v.array(v.string())), // Minimum 3 Categeories
+    // Timestamps
 
-        // Organizer  tracking (User Subscription)
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_token", ["tokenIdentifier"]),
 
-        freeEventsCreated  :v.number(),   //Track free event limit (1 free)
+  events: defineTable({
+    title: v.string(),
+    description: v.string(),
+    slug: v.string(),
 
+    // Organizer
+    organizerId: v.id("users"),
+    organizerName: v.string(),
 
-        // Timestamps 
+    // Event Details
+    category: v.string(),
+    tags: v.array(v.string()),
 
+    // Data and Time
 
-        createdAt : v.number(),
-        updatedAt : v.number(),
+    startDate: v.number(),
+    endDate: v.number(),
+    timezone: v.string(),
 
+    // Location
+    locationType: v.union(v.literal("physical"), v.literal("online")),
+    venue: v.optional(v.string()),
+    address: v.optional(v.string()),
+    city: v.string(),
+    state: v.optional(v.string()),
+    country: v.string(),
 
+    //   Capacity and Ticketing
+    capacity: v.number(),
+    ticketType: v.union(v.literal("free"), v.literal("paid")),
+    ticketPrice: v.optional(v.number()), //paid at event offline
+    registrationCount: v.number(),
 
+    // Customization
 
-        
+    coverImage: v.optional(v.string()),
+    themeColor: v.optional(v.string()),
 
+    // Timestamps
 
-      }).index("by_token", ["tokenIdentifier"]),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organizer", ["organizerId"])
+    .index("by_category", ["category"])
+    .index("by_start_date", ["startDate"])
+    .index("by_slug", ["slug"])
+    .searchIndex("search_title", { searchField: "title" }),
 
+  registations: defineTable({
+    eventId: v.id("events"),
+    userId: v.id("users"),
 
+    // Attendeee Info
+    attendeeName: v.string(),
+    attendeeEmail: v.string(),
 
+    // Qr code for entry
+    qrCode: v.string(), //Unique ID FOR QR
 
+    // Check-In
 
-      events : defineTable({
-        tilte : v.string(),
-        descriptionm : v.string(),
-        slug : v.string(),
+    checkedIn: v.boolean(),
+    checkedInAt: v.optional(v.number()),
 
+    // Status
+    status: v.union(v.literal("confirmed"), v.literal("cancelled")),
 
-        // Organizer
-        organizer : v.id("users"),
-        organizerName : v.string(),
-
-
-        // Event Details
-        category : v.string(),
-        tags : v.array(v.string()),
-
-
-
-        // Data and Time 
-
-        startDate : v.number(),
-        endDate : v.number(),
-        timezone : v.string(),
-
-
-        // Location
-         locationType : v.union(v.literal("physical"),v.literal("online")),
-         venue : v.optional(v.string()),
-         address :v.optional(v.string()),
-         city : v.string(),
-         state : v.optional(v.string()),
-
-    //   Capacity and Ticketing 
-    capacity : v.number(),
-    ticketType : v.union(v.literal("free"),v.literal("paid")),
-    ticketPrice : v.optional(v.number()),  //paid at event offline
-    registrationCount : v.number(),
-
-
-    // Customization 
-
-    coverImage : v.optional(v.string()),
-    themeColor : v.optional(v.string()),
-
-
-
-    // Timestamps 
-
-    createdAt : v.number(),
-    updatedAt : v.number(),
-
-      }).index("by_organizer", ["organizer"])
-      .index("by_category", ["category"])
-      .index("by_start_date",["startDate"])
-      .index("by_slug",["slug"])
-      .searchIndex("search_title",{searchField : "tilte" }),
-
-      registations : defineTable({
-
-        eventId : v.id("events"),
-        userId : v.id("users"),
-
-
-
-        // Attendeee Info 
-        attendeeName : v.string(),
-        attendeeEmail : v.string(),
-
-
-
-
-        // Qr code for entry 
-        qrCode : v.string(),  //Unique ID FOR QR
-
-
-
-        // Check-In 
-
-        checkedIn : v.boolean(),
-        checkedInAt : v.optional(v.number()),
-
-
-        // Status 
-        status : v.union(v.literal("confirmed"),v.literal("cancelled")),
-
-        registeredId : v.number(),
-
-        
-      }).index("by_event",["eventId"])
-      .index("by_user",["userId"])
-      .index("by_event_user",["eventId","userId"])
-      .index("by_qr_code",["qrCode"]),
-})
+    registeredId: v.number(),
+  })
+    .index("by_event", ["eventId"])
+    .index("by_user", ["userId"])
+    .index("by_event_user", ["eventId", "userId"])
+    .index("by_qr_code", ["qrCode"]),
+});
